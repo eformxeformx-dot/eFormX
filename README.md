@@ -1,4 +1,4 @@
-# 🚀 eFormX Digital Solution Pvt Ltd
+# eFormX Digital Solution Pvt Ltd
 
 Welcome to the official repository of **eFormX Digital Solution Pvt Ltd**.
 
