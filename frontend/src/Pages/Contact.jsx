@@ -19,20 +19,20 @@ const Contact = () => {
     {
       icon: <FiPhone className="w-6 h-6 text-secondary" />,
       title: "Call Us",
-      detail: "+91 98765 43210",
+      detail: "+91 7275004901",
       subDetail: "Support: 24/7 Available"
     },
     {
       icon: <FiMail className="w-6 h-6 text-secondary" />,
       title: "Email Us",
-      detail: "info@eformx.com",
+      detail: "support@eformx.com",
       subDetail: "Response within 2 hours"
     },
     {
       icon: <FiMapPin className="w-6 h-6 text-secondary" />,
       title: "Our Headquarters",
-      detail: "Digital Plaza, New Delhi",
-      subDetail: "India - 110001"
+      detail: "Basement Shop No. 01, Tauns Chauraha,",
+      subDetail: "Kanpur Nagar, Uttar Pradesh – 209401"
     }
   ];
 

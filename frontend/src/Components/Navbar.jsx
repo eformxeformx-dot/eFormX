@@ -44,13 +44,41 @@ const Navbar = () => {
             Home
           </NavLink>
 
-          <a href="#services" className="hover:text-secondary transition-colors">
+          <NavLink
+            to="/services"
+            className={({ isActive }) =>
+              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
+            }
+          >
             Services
-          </a>
+          </NavLink>
 
-          <a href="#features" className="hover:text-secondary transition-colors">
+          <NavLink
+            to="/features"
+            className={({ isActive }) =>
+              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
+            }
+          >
             Features
-          </a>
+          </NavLink>
+
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
+            }
+          >
+            About
+          </NavLink>
+
+          <NavLink
+            to="/faq"
+            className={({ isActive }) =>
+              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
+            }
+          >
+            FAQ
+          </NavLink>
 
           <NavLink
             to="/contact"

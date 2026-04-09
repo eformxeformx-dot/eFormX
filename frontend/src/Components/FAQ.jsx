@@ -24,7 +24,7 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(0)
 
   return (
-    <section className="section-padding bg-light">
+    <section id="faq" className="section-padding bg-slate-50">
       <div className="flex flex-col lg:flex-row gap-16">
         <div className="lg:w-1/3">
           <h4 className="text-secondary font-semibold mb-2">COMMON QUESTIONS</h4>

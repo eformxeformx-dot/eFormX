@@ -11,7 +11,7 @@ const stats = [
 
 const AboutSection = () => {
   return (
-    <section className="section-padding bg-slate-50">
+    <section id="about" className="section-padding bg-slate-50">
       <div className="flex flex-col lg:flex-row items-center gap-16">
         {/* Text Content */}
         <div className="lg:w-1/2">

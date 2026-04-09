@@ -39,7 +39,7 @@ const Footer = () => {
               (Icon, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href="#!"
                   className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-secondary transition-all"
                 >
                   <Icon size={18} />
@@ -65,20 +65,20 @@ const Footer = () => {
               </NavLink>
             </li>
             <li>
-              <a
-                href="#services"
+              <NavLink
+                to="/services"
                 className="hover:text-secondary transition-colors"
               >
                 Services
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a
-                href="#features"
+              <NavLink
+                to="/features"
                 className="hover:text-secondary transition-colors"
               >
                 Features
-              </a>
+              </NavLink>
             </li>
             <li>
               <NavLink
@@ -107,19 +107,28 @@ const Footer = () => {
               </NavLink>
             </li>
             <li>
-              <a href="#" className="hover:text-secondary transition-colors">
+              <NavLink
+                to="/privacy"
+                className="hover:text-secondary transition-colors"
+              >
                 Privacy Policy
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="#" className="hover:text-secondary transition-colors">
+              <NavLink
+                to="/help"
+                className="hover:text-secondary transition-colors"
+              >
                 Help Center
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="#" className="hover:text-secondary transition-colors">
+              <NavLink
+                to="/faq"
+                className="hover:text-secondary transition-colors"
+              >
                 FAQs
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>

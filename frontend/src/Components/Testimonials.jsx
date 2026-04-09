@@ -21,7 +21,7 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="section-padding bg-slate-50 relative overflow-hidden">
+    <section id="testimonials" className="section-padding bg-slate-50 relative overflow-hidden">
       {/* Decorative quotes */}
       <FaQuoteLeft className="absolute top-10 left-10 text-secondary/5" size={200} />
       
