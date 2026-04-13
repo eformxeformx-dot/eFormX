@@ -3,6 +3,13 @@ import { NavLink } from 'react-router-dom'
 import { FiMail, FiPhone, FiFacebook, FiTwitter, FiInstagram, FiLinkedin } from 'react-icons/fi'
 import logo from '../assets/logo.png'
 
+const socials = [
+  { Icon: FiFacebook,  href: "/" },
+  { Icon: FiTwitter,   href: "/" },
+  { Icon: FiInstagram, href: "https://www.instagram.com/eformx_pvt" },
+  { Icon: FiLinkedin,  href: "https://www.linkedin.com/company/eformx-digital-solutions-pvt-ltd/" },
+]
+
 const Navbar = () => {
   return (
     <header className="w-full fixed top-0 z-50">
@@ -20,10 +27,17 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-4">
-          <FiFacebook size={14} className="hover:text-secondary cursor-pointer transition-colors" />
-          <FiTwitter size={14} className="hover:text-secondary cursor-pointer transition-colors" />
-          <FiInstagram size={14} className="hover:text-secondary cursor-pointer transition-colors" />
-          <FiLinkedin size={14} className="hover:text-secondary cursor-pointer transition-colors" />
+          {socials.map(({ Icon, href }, i) => (
+            <a
+              key={i}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-secondary cursor-pointer transition-colors"
+            >
+              <Icon size={14} />
+            </a>
+          ))}
         </div>
       </div>
 
@@ -35,59 +49,24 @@ const Navbar = () => {
         </NavLink>
 
         <div className="hidden md:flex items-center gap-8 font-semibold text-primary/80">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
-            }
-          >
-            Home
-          </NavLink>
-
-          <NavLink
-            to="/services"
-            className={({ isActive }) =>
-              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
-            }
-          >
-            Services
-          </NavLink>
-
-          <NavLink
-            to="/features"
-            className={({ isActive }) =>
-              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
-            }
-          >
-            Features
-          </NavLink>
-
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
-            }
-          >
-            About
-          </NavLink>
-
-          <NavLink
-            to="/faq"
-            className={({ isActive }) =>
-              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
-            }
-          >
-            FAQ
-          </NavLink>
-
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive ? "text-secondary" : "hover:text-secondary transition-colors"
-            }
-          >
-            Contact
-          </NavLink>
+          {[
+            { label: 'Home',     to: '/' },
+            { label: 'Services', to: '/services' },
+            { label: 'Features', to: '/features' },
+            { label: 'About',    to: '/about' },
+            { label: 'FAQ',      to: '/faq' },
+            { label: 'Contact',  to: '/contact' },
+          ].map(({ label, to }) => (
+            <NavLink
+              key={label}
+              to={to}
+              className={({ isActive }) =>
+                isActive ? 'text-secondary' : 'hover:text-secondary transition-colors'
+              }
+            >
+              {label}
+            </NavLink>
+          ))}
         </div>
 
         <NavLink to="/dashboard" className="btn-primary">
