@@ -40,8 +40,8 @@ const AppDownloadCard = () => {
 }
 
 const StyledWrapper = styled.div`
-  .card {
-    max-width: 450px;
+  .card { 
+    width: 100%;
     background-color: rgb(7 16 45);
     background: linear-gradient(to top right, rgb(7 16 45), rgb(58 60 84));
     background: -webkit-linear-gradient(to top right, rgb(7 16 45), rgb(58 60 84));

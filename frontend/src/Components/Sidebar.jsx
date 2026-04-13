@@ -1,10 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { FiHome, FiFileText, FiShield, FiInfo, FiAlertTriangle, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { FiHome, FiFileText, FiShield, FiInfo, FiAlertTriangle, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi'
 import { motion, AnimatePresence } from 'framer-motion'
 import logo from '../assets/logo.png'
 
-const Sidebar = ({ isCollapsed, toggleSidebar }) => {
+
+
+const Sidebar = ({ isCollapsed, toggleSidebar, isMobile, onClose }) => {
   const menuItems = [
     { icon: <FiHome />, label: "Dashboard", path: "/dashboard" },
     { icon: <FiFileText />, label: "Terms & Conditions", path: "/term-and-condition" },
@@ -18,16 +20,16 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
       initial={false}
       animate={{ width: isCollapsed ? 96 : 320 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="h-screen bg-[#0f172a] text-white fixed left-0 top-0 z-50 flex flex-col border-r border-white/5 shadow-2xl"
+      className="h-screen bg-[#0f172a] text-white flex flex-col border-r border-white/5 shadow-2xl"
     >
       {/* Sidebar Header with Logo */}
-      <div className={`p-8 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} mb-6`}>
-        <div className="flex items-center gap-4 overflow-hidden">
+      <div className={`p-6 sm:p-8 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} mb-4 sm:mb-6`}>
+        <div className="flex items-center gap-3 sm:gap-4 overflow-hidden">
           <motion.div 
-            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileHover={{ scale: 1.1 }}
             className="flex-shrink-0"
           >
-            <img src={logo} alt="eFormX Logo" className="w-12 h-12 rounded-xl" />
+            <img src={logo} alt="eFormX Logo" className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl" />
           </motion.div>
           {!isCollapsed && (
             <motion.div
@@ -35,11 +37,19 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
               animate={{ opacity: 1, x: 0 }}
               className="flex flex-col"
             >
-              <span className="text-2xl font-black tracking-tighter text-white">eFormX</span>
-              <span className="text-[10px] font-bold text-secondary tracking-[0.3em] uppercase opacity-70">Solutions</span>
+              <span className="text-xl sm:text-2xl font-black tracking-tighter text-white">eFormX</span>
+              <span className="text-[8px] sm:text-[10px] font-bold text-white tracking-[0.3em] uppercase opacity-70">Solutions</span>
             </motion.div>
           )}
         </div>
+        {isMobile && (
+          <button 
+            onClick={onClose}
+            className="text-white p-2 hover:bg-white/10 rounded-lg transition-all"
+          >
+            <FiX size={24} />
+          </button>
+        )}
       </div>
 
       {/* Navigation Items */}
@@ -52,7 +62,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
               className={({ isActive }) => 
                 `flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${
                   isActive 
-                    ? "bg-secondary text-white shadow-lg shadow-secondary/25" 
+                    ? "bg-primary text-white shadow-lg shadow-primary/25" 
                     : "text-slate-400 hover:bg-white/5 hover:text-white"
                 }`
               }
@@ -97,7 +107,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: "65%" }}
-                className="h-full bg-secondary shadow-[0_0_10px_rgba(0,123,255,0.5)]"
+                className="h-full bg-primary shadow-[0_0_10px_rgba(99,102,241,0.5)]"
               ></motion.div>
             </div>
             <p className="text-[10px] text-slate-400 font-medium">Enhanced Security Protocol Active</p>

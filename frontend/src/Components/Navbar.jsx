@@ -71,7 +71,7 @@ const Navbar = () => {
             About
           </NavLink>
 
-          <NavLink
+          {/* <NavLink
             to="/faq"
             className={({ isActive }) =>
               isActive ? "text-secondary" : "hover:text-secondary transition-colors"
@@ -87,7 +87,7 @@ const Navbar = () => {
             }
           >
             Contact
-          </NavLink>
+          </NavLink> */}
         </div>
 
         <NavLink to="/dashboard" className="btn-primary">

@@ -64,7 +64,7 @@ const TermAndCondition = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="bg-secondary/10 w-24 h-24 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner ring-8 ring-secondary/5 rotate-3 hover:rotate-0 transition-transform duration-500">
+          <div className="bg-secondary/10 w-24 h-24 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner ring-8 ring-secondary/5  hover:rotate-0 transition-transform duration-500">
             <FiFileText size={44} className="text-secondary" />
           </div>
           <h1 className="text-5xl font-display font-black text-primary tracking-tight mb-4">Terms & Conditions</h1>
