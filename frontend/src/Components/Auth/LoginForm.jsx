@@ -61,7 +61,7 @@ const LoginForm = ({ onSuccess, isModal = false }) => {
   };
 
   return (
-    <FormWrapper isModal={isModal}>
+    <FormWrapper $isModal={isModal}>
       <form className="form" onSubmit={handleSubmit}>
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Welcome Back</h2>
@@ -157,7 +157,7 @@ const LoginForm = ({ onSuccess, isModal = false }) => {
 
 const FormWrapper = styled.div`
   width: 100%;
-  max-width: ${props => props.isModal ? '100%' : '480px'};
+  max-width: ${props => props.$isModal ? '100%' : '480px'};
   
   /* Hide scrollbar but keep functionality */
   &::-webkit-scrollbar {

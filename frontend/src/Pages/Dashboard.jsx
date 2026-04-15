@@ -35,6 +35,17 @@ const Dashboard = () => {
     { icon: <FiCheckCircle />, title: "Document Verification", type: "verification", hindiTitle: "दस्तावेज़ सत्यापन सेवा", ctaText: "Verify" }
   ];
 
+  // Logic to show max 8 on desktop and max 6 on mobile
+  const [limit, setLimit] = React.useState(window.innerWidth < 768 ? 6 : 8);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setLimit(window.innerWidth < 768 ? 6 : 8);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <DashboardLayout>
       <div className="p-4 md:p-8 lg:p-12">
@@ -50,7 +61,7 @@ const Dashboard = () => {
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8 lg:gap-10">
-          {services.map((service, idx) => (
+          {services.slice(0, limit).map((service, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -67,9 +78,21 @@ const Dashboard = () => {
             </motion.div>
           ))}
         </div>
+        
+        {services.length > limit && (
+          <div className="mt-12 text-center">
+            <button 
+              onClick={() => setLimit(services.length)}
+              className="bg-purple text-white px-8 py-3 rounded-full font-bold hover:bg-secondary transition-all shadow-lg"
+            >
+              View All Services
+            </button>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
 };
+
 
 export default Dashboard;

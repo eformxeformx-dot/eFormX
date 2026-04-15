@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import { registerUser } from '../../services/Api';
 import { useAuth } from '../../context/AuthContext';
 
 const SignupForm = ({ onSuccess, isModal = false }) => {
@@ -28,21 +28,8 @@ const SignupForm = ({ onSuccess, isModal = false }) => {
     setLoading(true);
     setError('');
 
-    // DIRECT API CONFIGURATION
-    const BASE_URL = 'https://api.eformx.com/api';
-    const MASTER_BEARER_TOKEN = '1c692a77-6dcc-4f73-89c7-187a6a3eed64';
-    const API_KEY = 'f2da7aff-6bdb-44a5-b43a-ca1f4bf7d736';
-
     try {
-      const response = await axios.post(`${BASE_URL}/register`, formData, {
-        headers: {
-          'Authorization': `Bearer ${MASTER_BEARER_TOKEN}`,
-          'api-token': API_KEY,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const res = response.data;
+      const res = await registerUser(formData);
       console.log("Registration Success:", res);
       
       if (res.status) {
@@ -63,14 +50,15 @@ const SignupForm = ({ onSuccess, isModal = false }) => {
 
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || err.message || "Registration failed. Please try again.");
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+
   return (
-    <FormWrapper isModal={isModal}>
+    <FormWrapper $isModal={isModal}>
       <form className="form" onSubmit={handleSubmit}>
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Create Account</h2>
@@ -187,7 +175,7 @@ const SignupForm = ({ onSuccess, isModal = false }) => {
 
 const FormWrapper = styled.div`
   width: 100%;
-  max-width: ${props => props.isModal ? '100%' : '520px'};
+  max-width: ${props => props.$isModal ? '100%' : '520px'};
   
   /* Hide scrollbar but keep functionality */
   &::-webkit-scrollbar {

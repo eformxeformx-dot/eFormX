@@ -1,13 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { FiMenu, FiBell, FiSearch, FiChevronLeft, FiChevronRight, FiLogOut, FiUser, FiCreditCard } from 'react-icons/fi'
+import { FiMenu, FiBell, FiSearch, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
+import UserDropdown from './UserDropdown'
 
 const DashboardNavbar = ({ onLoginClick, onSignupClick, isSidebarCollapsed, toggleSidebar, toggleMobileMenu }) => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
-    <nav className="h-20 bg-purple text-white flex items-center justify-between px-8 sticky top-0 z-40 shadow-lg">
-      <div className="flex items-center gap-6">
+    <nav className="h-16 md:h-20 bg-purple text-white flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 shadow-lg">
+      <div className="flex items-center gap-3 md:gap-6">
         {/* Desktop Toggle */}
         <button 
           onClick={toggleSidebar}
@@ -24,12 +25,12 @@ const DashboardNavbar = ({ onLoginClick, onSignupClick, isSidebarCollapsed, togg
           <FiMenu />
         </button>
 
-        <div className="hidden md:flex items-center gap-4 font-bold tracking-tight">
-          <span className="text-xl opacity-90">eFormX Dashboard</span>
+        <div className="hidden sm:flex items-center gap-4 font-bold tracking-tight">
+          <span className="text-lg md:text-xl opacity-90">eFormX Dashboard</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 md:gap-6">
         {/* Search Bar */}
         <div className="hidden xl:flex items-center bg-white/10 rounded-full px-5 py-2.5 gap-3 border border-white/10 focus-within:bg-white/20 transition-all">
           <FiSearch className="text-white/50" />
@@ -40,46 +41,15 @@ const DashboardNavbar = ({ onLoginClick, onSignupClick, isSidebarCollapsed, togg
           />
         </div>
 
-        {/* User Stats (If Logged In) */}
-        {user && (
-          <div className="hidden md:flex items-center gap-4 bg-black/20 px-6 py-2 rounded-2xl border border-white/10">
-            <div className="flex items-center gap-2">
-              <FiCreditCard className="text-secondary" />
-              <div className="flex flex-col">
-                <span className="text-[10px] uppercase font-black tracking-widest opacity-60 leading-none">Wallet</span>
-                <span className="text-sm font-black">₹{parseFloat(user.balance || 0).toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
-        )}
-
+        {/* Notification Bell (Quick view) */}
         <button className="relative p-2 text-xl hover:bg-white/10 rounded-lg transition-all cursor-pointer">
           <FiBell />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-purple"></span>
+          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-purple"></span>
         </button>
 
-        <div className="flex items-center gap-3 border-l border-white/20 pl-6 ml-2">
+        <div className="flex items-center gap-2 md:gap-3 border-l border-white/20 pl-3 md:pl-6 ml-1 md:ml-2">
           {user ? (
-            <div className="flex items-center gap-4">
-              <NavLink to="/profile" className="flex items-center gap-3 group">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:bg-white group-hover:text-purple transition-all">
-                  <FiUser className="text-lg" />
-                </div>
-                <div className="hidden sm:flex flex-col">
-                  <span className="text-xs font-black tracking-tight leading-none group-hover:text-secondary transition-colors truncate max-w-[100px]">
-                    {user.name}
-                  </span>
-                  <span className="text-[10px] font-bold opacity-60">ID: {user.user_id?.split('AK')[1] || '---'}</span>
-                </div>
-              </NavLink>
-              <button 
-                onClick={logout}
-                className="p-2.5 rounded-xl bg-red-500/20 text-red-100 hover:bg-red-500 hover:text-white transition-all cursor-pointer border border-red-500/20"
-                title="Logout"
-              >
-                <FiLogOut />
-              </button>
-            </div>
+            <UserDropdown />
           ) : (
             <>
               {onLoginClick ? (
@@ -114,5 +84,5 @@ const DashboardNavbar = ({ onLoginClick, onSignupClick, isSidebarCollapsed, togg
     </nav>
   )
 }
-
 export default DashboardNavbar
+

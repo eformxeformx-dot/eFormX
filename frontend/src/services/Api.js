@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 // DIRECT API CONFIGURATION
-const BASE_URL = 'https://api.eformx.com/api';
+const BASE_URL = '/api';
 const MASTER_BEARER_TOKEN = '1c692a77-6dcc-4f73-89c7-187a6a3eed64';
 const API_KEY = 'f2da7aff-6bdb-44a5-b43a-ca1f4bf7d736';
+
 
 // ---------------------------------------------------------
 // 1. REGISTER USER
@@ -92,6 +93,7 @@ export const applyService = async (serviceName, applyId) => {
       headers: {
         'Authorization': `Bearer ${MASTER_BEARER_TOKEN}`,
         'auth-token': userToken,
+        'api-token': API_KEY,
         'Content-Type': 'application/json'
       }
     });
@@ -101,3 +103,5 @@ export const applyService = async (serviceName, applyId) => {
     throw error.response?.data || { message: "Failed to apply for service", status: false };
   }
 };
+
+
