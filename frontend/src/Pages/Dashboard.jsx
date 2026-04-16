@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../Layouts/DashboardLayout';
 import ServiceCard from '../Components/ServiceCard';
 import { motion } from 'framer-motion';
@@ -7,7 +8,12 @@ import { FaGraduationCap, FaGavel } from 'react-icons/fa';
 import { fetchService, applyService } from '../services/Api';
 
 const Dashboard = () => {
-  const handleApply = async (serviceName) => {
+  const navigate = useNavigate();
+  const handleApply = async (serviceName, type) => {
+    if (type === 'all_vacancy') {
+      navigate('/vacancies');
+      return;
+    }
     try {
       // For now, using a placeholder apply_id (can be dynamic later)
       const res = await applyService(serviceName, `APP_${Date.now()}`);
@@ -73,7 +79,7 @@ const Dashboard = () => {
                 title={service.title}
                 hindiTitle={service.hindiTitle}
                 ctaText={service.ctaText}
-                onClick={() => handleApply(service.type || service.title)}
+                onClick={() => handleApply(service.title, service.type)}
               />
             </motion.div>
           ))}

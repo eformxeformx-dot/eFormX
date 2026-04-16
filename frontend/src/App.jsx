@@ -14,18 +14,23 @@ import Profile from './Pages/Profile'
 import HelpPage from './Pages/HelpPage'
 import NotFoundPage from './Pages/NotFoundPage'
 import Dashboard from './Pages/Dashboard'
+import Vacancies from './Pages/Vacancies'
+import VacancyDetails from './Pages/VacancyDetails'
 
 import Navbar from './Components/Navbar'
 import ScrollToTop from './Components/ScrollToTop'
+import AuthModal from './Components/Auth/AuthModal'
 
 const App = () => {
   const location = useLocation();
   const hideNavbarRoutes = [
     '/dashboard',
     '/profile',
+    '/vacancies',
     '/term-and-condition',
     '/privacy',
     '/disclaimer',
+    '/about',
     '/about-us',
     '/login',
     '/signup',
@@ -37,6 +42,7 @@ const App = () => {
   return (
     <div className="min-h-screen font-sans">
       <ScrollToTop />
+      <AuthModal />
       {!shouldHideNavbar && <Navbar />}
       
       <Routes>
@@ -50,6 +56,8 @@ const App = () => {
         <Route path='/download' element={<HomePage />} />
         <Route path='/help' element={<HelpPage />} />
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/vacancies' element={<Vacancies />} />
+        <Route path='/vacancies/:type' element={<VacancyDetails />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />

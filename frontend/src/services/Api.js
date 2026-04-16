@@ -3,7 +3,7 @@ import axios from 'axios';
 // DIRECT API CONFIGURATION
 const BASE_URL = '/api';
 const MASTER_BEARER_TOKEN = '1c692a77-6dcc-4f73-89c7-187a6a3eed64';
-const API_KEY = 'f2da7aff-6bdb-44a5-b43a-ca1f4bf7d736';
+const API_KEY = 'dd924284-89c4-492a-b926-83f8fe5087ce';
 
 
 // ---------------------------------------------------------
@@ -83,6 +83,22 @@ export const fetchService = async (serviceName) => {
   }
 };
 
+export const fetchVacancies = async () => {
+  try {
+    const response = await axios.post(`${BASE_URL}/featch?efx=get&type=sr&request=vacancy`, {}, {
+      headers: {
+        'Authorization': `Bearer ${MASTER_BEARER_TOKEN}`,
+        'api-token': API_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Vacancies Fetch Error:", error.response?.data || error.message);
+    throw error.response?.data || { message: "Failed to fetch vacancies", status: false };
+  }
+};
+
 // ---------------------------------------------------------
 // 5. APPLY FOR SERVICE
 // ---------------------------------------------------------
@@ -104,4 +120,21 @@ export const applyService = async (serviceName, applyId) => {
   }
 };
 
-
+// ---------------------------------------------------------
+// 6. GOOGLE SOCIAL AUTH (Login/Register)
+// ---------------------------------------------------------
+export const googleAuth = async (token) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/go_auth`, { token }, {
+      headers: {
+        'Authorization': `Bearer : ${MASTER_BEARER_TOKEN}`,
+        'api-token': API_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Google Auth Error:", error.response?.data || error.message);
+    throw error.response?.data || { message: "Google authentication failed", status: false };
+  }
+};

@@ -2,15 +2,19 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { FiMail, FiPhone, FiFacebook, FiTwitter, FiInstagram, FiLinkedin } from 'react-icons/fi'
 import logo from '../assets/logo.png'
+import { useAuth } from '../context/AuthContext'
+import UserDropdown from './UserDropdown'
 
 const socials = [
-  { Icon: FiFacebook,  href: "/" },
-  { Icon: FiTwitter,   href: "/" },
+  { Icon: FiFacebook, href: "/" },
+  { Icon: FiTwitter, href: "/" },
   { Icon: FiInstagram, href: "https://www.instagram.com/eformx_pvt" },
-  { Icon: FiLinkedin,  href: "https://www.linkedin.com/company/eformx-digital-solutions-pvt-ltd/" },
+  { Icon: FiLinkedin, href: "https://www.linkedin.com/company/eformx-digital-solutions-pvt-ltd/" },
 ]
 
 const Navbar = () => {
+  const { user, openLogin } = useAuth();
+
   return (
     <header className="w-full fixed top-0 z-50">
       {/* Top Bar */}
@@ -50,12 +54,10 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center gap-8 font-semibold text-primary/80">
           {[
-            { label: 'Home',     to: '/' },
+            { label: 'Home', to: '/' },
             { label: 'Services', to: '/services' },
             { label: 'Features', to: '/features' },
-            { label: 'About',    to: '/about' },
-            { label: 'FAQ',      to: '/faq' },
-            { label: 'Contact',  to: '/contact' },
+            { label: 'Contact', to: '/contact' },
           ].map(({ label, to }) => (
             <NavLink
               key={label}
@@ -69,9 +71,23 @@ const Navbar = () => {
           ))}
         </div>
 
-        <NavLink to="/dashboard" className="btn-primary">
-          Get Started
-        </NavLink>
+        <div className="flex items-center gap-4">
+          {user && (
+            <div className="scale-90 md:scale-100">
+              <UserDropdown />
+            </div>
+          )}
+
+          {user ? (
+            <NavLink to="/dashboard" className="btn-primary cursor-pointer">
+              Dashboard
+            </NavLink>
+          ) : (
+            <button onClick={openLogin} className="btn-primary cursor-pointer">
+              Get Started
+            </button>
+          )}
+        </div>
       </nav>
     </header>
   )
