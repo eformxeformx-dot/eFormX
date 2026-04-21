@@ -35,12 +35,18 @@ const Dashboard = () => {
     { icon: <FiCheckCircle />, title: "Document Verification", type: "verification", hindiTitle: "दस्तावेज़ सत्यापन सेवा", ctaText: "Verify" }
   ];
 
-  // Logic to show max 8 on desktop and max 6 on mobile
-  const [limit, setLimit] = React.useState(window.innerWidth < 768 ? 6 : 8);
+  // Logic to show appropriate cards based on screen size
+  const getLimit = () => {
+    const width = window.innerWidth;
+    if (width < 1024) return 6; // mobile and tablet
+    return 10; // desktop and above
+  };
+
+  const [limit, setLimit] = React.useState(getLimit());
 
   React.useEffect(() => {
     const handleResize = () => {
-      setLimit(window.innerWidth < 768 ? 6 : 8);
+      setLimit(getLimit());
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -48,19 +54,20 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-4 md:p-8 lg:p-12">
+      <div className="p-3 sm:p-4 md:p-6 lg:p-8 xl:p-12 max-w-[100vw] overflow-x-hidden">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 md:mb-12 text-center"
         >
-          <h1 className="text-3xl md:text-5xl font-black text-purple tracking-tight mb-4 text-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-purple tracking-tight mb-3 sm:mb-4 text-center">
             Our Services / हमारी सेवाएँ
           </h1>
-          <div className="h-1.5 w-24 bg-secondary mx-auto rounded-full"></div>
+          <div className="h-1 sm:h-1.5 w-16 sm:w-20 md:w-24 bg-secondary mx-auto rounded-full"></div>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8 lg:gap-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 w-full">
+
           {services.slice(0, limit).map((service, idx) => (
             <motion.div
               key={idx}
@@ -83,7 +90,7 @@ const Dashboard = () => {
           <div className="mt-12 text-center">
             <button 
               onClick={() => setLimit(services.length)}
-              className="bg-purple text-white px-8 py-3 rounded-full font-bold hover:bg-secondary transition-all shadow-lg"
+              className="bg-purple text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base hover:bg-secondary transition-all shadow-lg"
             >
               View All Services
             </button>

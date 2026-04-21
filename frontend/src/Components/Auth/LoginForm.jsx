@@ -63,9 +63,9 @@ const LoginForm = ({ onSuccess, isModal = false }) => {
   return (
     <FormWrapper $isModal={isModal}>
       <form className="form" onSubmit={handleSubmit}>
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Welcome Back</h2>
-          <p className="text-gray-500 mt-2">Sign in to your eFormx account</p>
+        <div className="text-center mb-2 border-b border-gray-200 pb-4">
+          <h2 className="text-2xl font-bold text-gray-700 tracking-tight">Welcome Back</h2>
+          <p className="text-gray-600 mt-2">Sign in to your eFormx account</p>
         </div>
 
         <div className="input-group">
@@ -116,7 +116,7 @@ const LoginForm = ({ onSuccess, isModal = false }) => {
             <span>Remember me </span>
           </label>
           <Link to="/forgot-password" style={{ color: '#2563eb', fontSize: '14px', fontWeight: '500' }}>
-            Forgot password?
+            Forget your password?
           </Link>
         </div>
 
@@ -180,7 +180,7 @@ const FormWrapper = styled.div`
 
   .label {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     color: #334155;
   }
 

@@ -31,7 +31,7 @@ const DashboardLayout = ({ children }) => {
         onClose={closeMobileMenu}
       />
       
-      <main className={`flex-1 transition-all duration-500 ease-in-out min-h-screen flex flex-col ${isSidebarCollapsed ? 'lg:ml-[96px]' : 'lg:ml-[300px]'} ${isAuthModalOpen ? 'blur-md' : ''}`}>
+      <main className={`flex-1 transition-all duration-500 ease-in-out min-h-screen flex flex-col w-full ${isSidebarCollapsed ? 'lg:ml-[96px]' : 'lg:ml-[300px]'} ${isAuthModalOpen ? 'blur-md' : ''} overflow-x-hidden`}>
         <DashboardNavbar 
           onLoginClick={() => openModal('login')} 
           onSignupClick={() => openModal('signup')}
@@ -42,9 +42,11 @@ const DashboardLayout = ({ children }) => {
 
 
         {/* Global Announcement Banner */}
-        <div className="bg-yellow-400 text-black py-2.5 px-8 text-center font-bold text-sm tracking-wide shadow-sm flex items-center justify-center gap-2">
-          <span className="bg-black text-white px-2 py-0.5 rounded text-[10px] uppercase">New</span>
-          Scale your operations with eFormx infrastructure! Check out our new features.
+        <div className="bg-yellow-400 text-black py-2.5 px-4 sm:px-8 text-center font-bold text-sm tracking-wide shadow-sm flex items-center justify-center gap-2 overflow-hidden">
+          <div className='flex items-center gap-2 whitespace-nowrap animate-scroll'>
+          <p className="bg-black text-white px-2 py-0.5 rounded text-[10px] uppercase">New</p>
+         <p>Scale your operations with eFormx infrastructure! Check out our new features.</p>
+         </div> 
         </div>
         
         <div className="flex-1">
