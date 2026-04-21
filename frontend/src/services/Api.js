@@ -4,6 +4,7 @@ import axios from 'axios';
 const BASE_URL = '/api';
 const MASTER_BEARER_TOKEN = '1c692a77-6dcc-4f73-89c7-187a6a3eed64';
 const API_KEY = 'dd924284-89c4-492a-b926-83f8fe5087ce';
+const Api_key_r = 'f2da7aff-6bdb-44a5-b43a-ca1f4bf7d736'
 
 
 // ---------------------------------------------------------
@@ -14,7 +15,7 @@ export const registerUser = async (userData) => {
     const response = await axios.post(`${BASE_URL}/register`, userData, {
       headers: {
         'Authorization': `Bearer ${MASTER_BEARER_TOKEN}`,
-        'api-token': API_KEY,
+        'api-token': Api_key_r,
         'Content-Type': 'application/json'
       }
     });
