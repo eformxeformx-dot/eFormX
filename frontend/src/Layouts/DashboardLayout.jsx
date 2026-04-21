@@ -1,40 +1,26 @@
 import React, { useState } from 'react';
 import Sidebar from '../Components/Sidebar';
 import DashboardNavbar from '../Components/DashboardNavbar';
-import AuthModal from '../Components/Auth/AuthModal';
 import { useAuth } from '../context/AuthContext';
 
 const DashboardLayout = ({ children }) => {
-  const { user, isSidebarCollapsed, toggleSidebar } = useAuth();
+  const { user, isSidebarCollapsed, toggleSidebar, openLogin, openSignup, isAuthModalOpen } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [modalType, setModalType] = useState('login');
   
-  const openModal = (type) => {
-    setModalType(type);
-    setIsAuthModalOpen(true);
-  };
-
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <div className="flex bg-[#f8fafc] min-h-screen overflow-x-hidden relative">
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-        type={modalType}
-      />
-
       <Sidebar 
         isCollapsed={isSidebarCollapsed} 
         isOpen={isMobileMenuOpen}
         onClose={closeMobileMenu}
       />
       
-      <main className={`flex-1 transition-all duration-500 ease-in-out min-h-screen flex flex-col ${isSidebarCollapsed ? 'lg:ml-[96px]' : 'lg:ml-[300px]'} ${isAuthModalOpen ? 'blur-md' : ''}`}>
+      <main className={`flex-1 transition-all duration-500 ease-in-out min-h-screen flex flex-col ${isSidebarCollapsed ? 'xl:ml-[96px]' : 'xl:ml-[300px]'} ${isAuthModalOpen ? 'blur-md' : ''}`}>
         <DashboardNavbar 
-          onLoginClick={() => openModal('login')} 
-          onSignupClick={() => openModal('signup')}
+          onLoginClick={openLogin} 
+          onSignupClick={openSignup}
           isSidebarCollapsed={isSidebarCollapsed}
           toggleSidebar={toggleSidebar}
           toggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

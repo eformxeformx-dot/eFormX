@@ -24,7 +24,7 @@ const Sidebar = ({ isCollapsed, isOpen, onClose }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[55] lg:hidden"
+            className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[55] xl:hidden"
           />
         )}
       </AnimatePresence>
@@ -33,7 +33,7 @@ const Sidebar = ({ isCollapsed, isOpen, onClose }) => {
         initial={false}
         animate={{ 
           width: isCollapsed ? 96 : 300,
-          x: isOpen ? 0 : (window.innerWidth < 1024 ? -300 : 0)
+          x: isOpen ? 0 : (window.innerWidth < 1280 ? -300 : 0)
         }}
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         className={`h-screen bg-[#0f172a] text-white fixed left-0 top-0 z-[60] flex flex-col border-r border-white/5 shadow-[25px_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden`}
@@ -66,7 +66,7 @@ const Sidebar = ({ isCollapsed, isOpen, onClose }) => {
           {/* Mobile Close Button */}
           <button 
             onClick={onClose}
-            className="lg:hidden absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
+            className="xl:hidden absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
           >
             <FiX size={20} />
           </button>
@@ -79,7 +79,7 @@ const Sidebar = ({ isCollapsed, isOpen, onClose }) => {
               <NavLink
                 key={idx}
                 to={item.path}
-                onClick={() => { if(window.innerWidth < 1024) onClose(); }}
+                onClick={() => { if(window.innerWidth < 1280) onClose(); }}
                 className={({ isActive }) => 
                   `flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 group ${
                     isActive 

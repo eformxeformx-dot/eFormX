@@ -8,12 +8,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [sessionExpiry, setSessionExpiry] = useState(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [modalType, setModalType] = useState('login');
 
-  // Set initial mock expiry (4 hours from now)
+  // Set initial session expiry (7 days from now)
   const refreshSessionExpiry = () => {
     const expiry = new Date();
-    expiry.setHours(expiry.getHours() + 4);
+    expiry.setDate(expiry.getDate() + 7);
     setSessionExpiry(expiry);
+    localStorage.setItem('session_expiry', expiry.toISOString());
   };
 
   // Check for existing token and fetch profile on load
@@ -27,14 +30,32 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await fetchProfile();
       if (res.status) {
+        // Map the API data structure to a flatter format if needed, 
+        // or just store the whole object. The user provided:
+        // res.data.kyc.first_name, res.data.wallet.balance, etc.
         setUser(res.data);
-        refreshSessionExpiry();
+        
+        // Restore or refresh expiry
+        const savedExpiry = localStorage.getItem('session_expiry');
+        if (savedExpiry) {
+          const expiryDate = new Date(savedExpiry);
+          if (expiryDate > new Date()) {
+            setSessionExpiry(expiryDate);
+          } else {
+            refreshSessionExpiry();
+          }
+        } else {
+          refreshSessionExpiry();
+        }
       } else {
         // Token might be invalid
         localStorage.removeItem('auth_token');
+        localStorage.removeItem('session_expiry');
+        setUser(null);
       }
     } catch (error) {
       console.error("Profile fetch failed:", error);
+      // Don't logout on network error, only on 401/403 which should be handled in Api.js or here
     } finally {
       setLoading(false);
     }
@@ -54,12 +75,32 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('session_expiry');
     setUser(null);
     setSessionExpiry(null);
   };
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
+  };
+
+  const openLogin = () => {
+    setModalType('login');
+    setIsAuthModalOpen(true);
+  };
+
+  const openSignup = () => {
+    setModalType('signup');
+    setIsAuthModalOpen(true);
+  };
+
+  const openForgotPassword = () => {
+    setModalType('forgot-password');
+    setIsAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
   };
 
   return (
@@ -71,13 +112,17 @@ export const AuthProvider = ({ children }) => {
       refreshProfile: loadProfile,
       isSidebarCollapsed,
       toggleSidebar,
-      sessionExpiry
+      sessionExpiry,
+      isAuthModalOpen,
+      modalType,
+      openLogin,
+      openSignup,
+      openForgotPassword,
+      closeAuthModal
     }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-
 
 export const useAuth = () => useContext(AuthContext);
