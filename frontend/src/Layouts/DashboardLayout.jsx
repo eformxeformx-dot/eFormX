@@ -29,8 +29,10 @@ const DashboardLayout = ({ children }) => {
 
         {/* Global Announcement Banner */}
         <div className="bg-yellow-400 text-black py-2.5 px-8 text-center font-bold text-sm tracking-wide shadow-sm flex items-center justify-center gap-2">
+          <div className='flex gap-2 items-center animate-marquee'>
           <span className="bg-black text-white px-2 py-0.5 rounded text-[10px] uppercase">New</span>
-          Scale your operations with eFormx infrastructure! Check out our new features.
+          <p>Scale your operations with eFormx infrastructure! Check out our new features.</p>
+          </div>
         </div>
         
         <div className="flex-1">
