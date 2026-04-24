@@ -35,15 +35,24 @@ const VacancyDetails = () => {
     loadJobs();
   }, [type]);
 
+const normalizeType = (type) =>
+  type?.toLowerCase().trim();
+
   const handleApply = async (job) => {
+    // console.log(job)
     if (!user) {
       openLogin();
       return;
     }
 
     try {
+
+      const type = normalizeType(job.type);
+
+     console.log("SENDING TYPE:", type);
+
       // Using job.name and job.token (apply_id) as per user provided URL structure
-      const res = await applyService(job.name, job.token);
+      const res = await applyService(type, job.token);
       if (res.status) {
         alert("Application Submitted Successfully! 🚀");
       } else {
