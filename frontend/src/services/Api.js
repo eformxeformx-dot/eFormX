@@ -140,9 +140,7 @@ export const fetchVacancies = async () => {
 // ---------------------------------------------------------
 
 export const applyService = async (serviceName, applyId) => {
-  // console.log("Apply Service:", serviceName, applyId);
   const userToken = localStorage.getItem("auth_token");
-  // console.log("user token", userToken);
   try {
     const response = await axios.post(
       `${BASE_URL}/featch?efx=get&type=${serviceName}&apply_id=${applyId}`,
@@ -170,7 +168,6 @@ export const applyService = async (serviceName, applyId) => {
     );
   }
 };
-
 // ---------------------------------------------------------
 // 6. GOOGLE SOCIAL AUTH (Login/Register)
 // ---------------------------------------------------------
