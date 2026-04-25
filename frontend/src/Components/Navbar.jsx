@@ -57,6 +57,7 @@ const Navbar = () => {
             { label: 'Home', to: '/' },
             { label: 'Services', to: '/services' },
             { label: 'Features', to: '/features' },
+            { label: 'About', to: '/about' },
             { label: 'Contact', to: '/contact' },
           ].map(({ label, to }) => (
             <NavLink

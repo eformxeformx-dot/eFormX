@@ -1,30 +1,30 @@
 import React from 'react'
-import { FiShield, FiCpu, FiActivity } from 'react-icons/fi'
+import { FiBriefcase, FiAward, FiFileText, FiEdit } from 'react-icons/fi'
 import { FaUniversity } from 'react-icons/fa'
 
 const services = [
   {
-    icon: <FaUniversity size={32} />,
-    title: "Core Fintech Billing",
-    desc: "Advanced billing solutions for fintech companies with automated reconciliation.",
+    icon: <FiBriefcase size={32} />,
+    title: "Latest Job Vacancies",
+    desc: "Stay ahead of the competition with our latest job vacancies and scholarship opportunities.",
     color: "bg-blue-600"
   },
   {
-    icon: <FiShield size={32} />,
-    title: "Micro-insurance Solution",
-    desc: "Comprehensive micro-insurance platform for rural and semi-urban populations.",
+    icon: <FiAward size={32} />,
+    title: "Find Scholarships & Apply",
+    desc: "Access a wide range of scholarships and funding opportunities for students.",
     color: "bg-cyan-600"
   },
   {
-    icon: <FiCpu size={32} />,
-    title: "API-Integrated Solutions",
-    desc: "Seamlessly integrate our digital services into your existing systems via our robust API.",
+    icon: <FiFileText size={32} />,
+    title: "Fill Government Documents & Form Easily",
+    desc: "Effortlessly fill out government documents and forms with our user-friendly tool.",
     color: "bg-indigo-600"
   },
   {
-    icon: <FiActivity size={32} />,
-    title: "Transaction Services",
-    desc: "Secure, real-time transaction monitoring and processing for all digital payments.",
+    icon: <FiEdit size={32} />,
+    title: "Build Resume Easily",
+    desc: "Easy resume building tool for job seekers.",
     color: "bg-sky-600"
   }
 ]
@@ -40,7 +40,7 @@ const Services = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {services.map((service, index) => (
           <div key={index} className="flex flex-col items-center text-center p-8 rounded-3xl border border-slate-100 hover:border-secondary/20 hover:shadow-2xl transition-all duration-300 group">
             <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white mb-8 ${service.color} shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform`}>

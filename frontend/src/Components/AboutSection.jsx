@@ -1,5 +1,7 @@
 import React from 'react'
 import aboutImg from '../../src/assets/about_illustration.png'
+import About from '../Pages/About'
+import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 
 const stats = [
@@ -39,27 +41,27 @@ const AboutSection = () => {
             ))}
           </ul>
 
+          <Link to="/about">
           <button className="btn-primary px-10">Read More About Us</button>
+          </Link>
         </div>
 
         {/* Illustration & Stats Card */}
-        <div className="lg:w-1/2 relative flex justify-center">
-          <div className="relative z-10">
-            <img 
-              src={aboutImg} 
-              alt="About Illustration" 
-              className="w-full h-auto max-w-lg drop-shadow-2xl rounded-2xl" 
-            />
-            
-            {/* Stats Overlay */}
-            <div className="lg:absolute -bottom-10 -right-10 bg-white p-8 rounded-2xl shadow-2xl grid grid-cols-2 gap-8 min-w-[320px] mt-8 lg:mt-0">
-              {stats.map((stat, idx) => (
-                <div key={idx} className="text-center">
-                  <h3 className="text-2xl text-secondary mb-1">{stat.value}</h3>
-                  <p className="text-xs font-bold text-muted uppercase tracking-wider">{stat.label}</p>
-                </div>
-              ))}
-            </div>
+        <div className="lg:w-1/2 relative flex flex-col items-center justify-center">
+          <img 
+            src={aboutImg} 
+            alt="About Illustration" 
+            className="w-full h-auto max-w-lg drop-shadow-2xl rounded-2xl" 
+          />
+          
+          {/* Stats Card */}
+          <div className="bg-white p-8 rounded-2xl shadow-2xl grid grid-cols-2 gap-8 min-w-[320px] mt-8">
+            {stats.map((stat, idx) => (
+              <div key={idx} className="text-center">
+                <h3 className="text-2xl text-secondary mb-1">{stat.value}</h3>
+                <p className="text-xs font-bold text-muted uppercase tracking-wider">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
