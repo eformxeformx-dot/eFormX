@@ -1,6 +1,6 @@
 import React from 'react'
 import { FiPlay } from 'react-icons/fi'
- import heroImg from '../../src/assets/hero_image.png' // I'll assume I should copy it to assets or use direct path
+import heroImg from '../../src/assets/hero_illustration.png' // I'll assume I should copy it to assets or use direct path
 
 const Hero = () => {
   return (
@@ -32,14 +32,13 @@ const Hero = () => {
           </div>
         </div>
 
-         <div>
-           <img 
+        <div className="flex-1 w-full max-w-2xl animate-float">
+          <img 
             src={heroImg} 
             alt="Hero Illustration" 
-            class="w-full  max-w-4xl md:max-w-4xl lg:max-w-5xl mx-auto drop-shadow-2xl rounded-2xl"
+            className="w-full h-auto drop-shadow-2xl"
           />
-          </div>
-        
+        </div>
       </div>
     </section>
   )

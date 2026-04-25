@@ -2,7 +2,9 @@ import React from 'react';
 import DashboardLayout from '../Layouts/DashboardLayout';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { FiUser, FiMail, FiPhone, FiCreditCard, FiShield, FiTrendingUp } from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiCreditCard, FiShield, FiTrendingUp, FiChevronRight } from 'react-icons/fi';
+
+const PURPLE = '#6c3fc5';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -10,104 +12,222 @@ const Profile = () => {
   if (!user) {
     return (
       <DashboardLayout>
-        <div className="p-12 text-center">
-          <h2 className="text-2xl font-bold text-slate-400">Please log in to view your profile</h2>
+        <div style={{ padding: '3rem', textAlign: 'center' }}>
+          <h2 style={{ fontSize: 20, color: '#94a3b8', fontWeight: 500 }}>
+            Please log in to view your profile
+          </h2>
         </div>
       </DashboardLayout>
     );
   }
 
+  const card = {
+    background: '#fff',
+    border: '0.5px solid #e8e6f0',
+    borderRadius: 16,
+    padding: '24px',
+  };
+
+  const fieldLabel = {
+    fontSize: 10,
+    color: '#94a3b8',
+    textTransform: 'uppercase',
+    letterSpacing: '0.15em',
+    fontWeight: 500,
+    marginBottom: 4,
+  };
+
+  const fieldVal = {
+    fontSize: 13,
+    color: '#1a1a2e',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    fontWeight: 500,
+  };
+
   return (
     <DashboardLayout>
-      <div className="p-4 md:p-8 lg:p-12 max-w-6xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+      <div style={{ padding: '2rem', maxWidth: 1100, margin: '0 auto' }}>
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          style={{ marginBottom: '2rem' }}
         >
-          <h1 className="text-4xl font-black text-slate-800 tracking-tight">Your Profile</h1>
-          <p className="text-slate-500 font-medium">Manage your account and view balance</p>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: '#1a1a2e' }}>Your Profile</h1>
+          <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>
+            Manage your account and view balance
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Profile Card */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-slate-200/50 border border-slate-100">
-              <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-                <div className="w-32 h-32 rounded-[2.5rem] bg-purple flex items-center justify-center shadow-2xl shadow-purple/30 group">
-                  <span className="text-5xl text-white font-black group-hover:scale-110 transition-transform">
-                    {user.name?.charAt(0) || 'U'}
-                  </span>
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 20 }}>
+
+          {/* Left col */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Profile card */}
+            <div style={card}>
+              {/* Avatar + name */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+                <div style={{
+                  width: 72, height: 72, borderRadius: 16,
+                  background: PURPLE,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 28, fontWeight: 700, color: '#fff', flexShrink: 0,
+                }}>
+                  {user.name?.charAt(0) || 'U'}
                 </div>
-                <div className="text-center md:text-left">
-                  <h2 className="text-3xl font-black text-slate-800 tracking-tight mb-2">{user.name}</h2>
-                  <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                    <span className="bg-purple/10 text-purple px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest leading-none border border-purple/10">Standard User</span>
-                    <span className="bg-green-500/10 text-green-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest leading-none border border-green-500/10">Active Account</span>
+                <div>
+                  <p style={{ fontSize: 18, fontWeight: 600, color: '#1a1a2e', marginBottom: 8 }}>
+                    {user.name}
+                  </p>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <span style={{
+                      padding: '4px 12px', borderRadius: 99,
+                      fontSize: 11, fontWeight: 500,
+                      background: '#EEEDFE', color: '#534AB7',
+                      border: '0.5px solid #AFA9EC',
+                    }}>Standard User</span>
+                    <span style={{
+                      padding: '4px 12px', borderRadius: 99,
+                      fontSize: 11, fontWeight: 500,
+                      background: '#EAF3DE', color: '#3B6D11',
+                      border: '0.5px solid #97C459',
+                    }}>Active Account</span>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-slate-100">
-                <div className="space-y-2">
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Contact Number</label>
-                  <p className="flex items-center gap-3 text-slate-700 font-bold">
-                    <FiPhone className="text-purple" /> {user.number || 'N/A'}
+              {/* Fields */}
+              <div style={{
+                display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20,
+                paddingTop: 20,
+                borderTop: '0.5px solid #e8e6f0',
+              }}>
+                <div>
+                  <p style={fieldLabel}>Contact Number</p>
+                  <p style={fieldVal}>
+                    <FiPhone size={14} color={PURPLE} />
+                    {user.number || 'N/A'}
                   </p>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Email Address</label>
-                  <p className="flex items-center gap-3 text-slate-700 font-bold">
-                    <FiMail className="text-purple" /> {user.email || 'N/A'}
+                <div>
+                  <p style={fieldLabel}>Email Address</p>
+                  <p style={fieldVal}>
+                    <FiMail size={14} color={PURPLE} />
+                    {user.email || 'N/A'}
                   </p>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">User ID</label>
-                  <p className="flex items-center gap-3 text-slate-700 font-bold">
-                    <FiShield className="text-purple" /> {user.user_id || 'Generating...'}
+                <div>
+                  <p style={fieldLabel}>User ID</p>
+                  <p style={fieldVal}>
+                    <FiShield size={14} color={PURPLE} />
+                    {user.user_id || 'Generating...'}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Recent Activities Placeholder */}
-            <div className="bg-slate-50 rounded-[2.5rem] p-10 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
-               <FiTrendingUp size={48} className="text-slate-300 mb-4" />
-               <h4 className="text-slate-500 font-black uppercase tracking-widest text-sm mb-1">Transaction History</h4>
-               <p className="text-slate-400 text-xs">Recent service applications and payments will appear here</p>
+            {/* Transaction history placeholder */}
+            <div style={{
+              border: '0.5px dashed #d1d5db',
+              borderRadius: 14,
+              padding: '36px 20px',
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', gap: 8,
+              color: '#94a3b8', textAlign: 'center',
+            }}>
+              <FiTrendingUp size={32} style={{ opacity: 0.4 }} />
+              <p style={{ fontSize: 13, fontWeight: 500, color: '#64748b' }}>
+                Transaction History
+              </p>
+              <p style={{ fontSize: 12 }}>
+                Recent service applications and payments will appear here
+              </p>
             </div>
           </div>
 
-          {/* Balance Sidebar Card */}
-          <div className="space-y-8">
-            <div className="bg-gradient-to-br from-purple to-secondary rounded-[2.5rem] p-10 text-white shadow-2xl shadow-purple/30 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
-                <FiCreditCard size={120} />
+          {/* Right col */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Balance card */}
+            <div style={{
+              background: PURPLE,
+              borderRadius: 16,
+              padding: 24,
+              color: '#fff',
+              position: 'relative',
+              overflow: 'hidden',
+            }}>
+              <div style={{
+                position: 'absolute', top: -30, right: -30,
+                width: 100, height: 100,
+                background: 'rgba(255,255,255,0.07)',
+                borderRadius: '50%',
+              }} />
+              <p style={{
+                fontSize: 10, opacity: 0.7,
+                textTransform: 'uppercase', letterSpacing: '0.15em',
+                fontWeight: 500, marginBottom: 4,
+              }}>
+                Available Balance
+              </p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, margin: '8px 0 20px' }}>
+                <span style={{ fontSize: 14, opacity: 0.7 }}>₹</span>
+                <span style={{ fontSize: 36, fontWeight: 700 }}>
+                  {parseFloat(user.balance || 0).toLocaleString()}
+                </span>
               </div>
-              <div className="relative z-10">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-70 mb-2">Available Balance</p>
-                <div className="flex items-baseline gap-2 mb-8">
-                  <span className="text-sm font-bold opacity-70">₹</span>
-                  <span className="text-5xl font-black tracking-tighter">{parseFloat(user.balance || 0).toLocaleString()}</span>
-                </div>
-                <button className="w-full bg-white text-purple py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-[1.02] transition-transform active:scale-95">
-                  Add New Funds
-                </button>
-              </div>
+              <button style={{
+                width: '100%', padding: '10px 0',
+                borderRadius: 10, border: 'none',
+                background: '#fff', color: PURPLE,
+                fontSize: 12, fontWeight: 600, cursor: 'pointer',
+              }}>
+                Add New Funds
+              </button>
             </div>
 
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
-               <h4 className="text-slate-800 font-black text-sm uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Account Security</h4>
-               <div className="space-y-4">
-                 <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-colors group">
-                    <span className="text-sm font-bold text-slate-600 group-hover:text-purple">Change Password</span>
-                    <FiShield className="text-slate-400 group-hover:text-purple" />
-                 </button>
-                 <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-colors group">
-                    <span className="text-sm font-bold text-slate-600 group-hover:text-purple">Security Logs</span>
-                    <FiTrendingUp className="text-slate-400 group-hover:text-purple" />
-                 </button>
-               </div>
+            {/* Security card */}
+            <div style={card}>
+              <p style={{
+                fontSize: 11, fontWeight: 500,
+                textTransform: 'uppercase', letterSpacing: '0.1em',
+                color: '#94a3b8',
+                paddingBottom: 12,
+                borderBottom: '0.5px solid #e8e6f0',
+                marginBottom: 4,
+              }}>
+                Account Security
+              </p>
+              {[
+                { label: 'Change Password', icon: <FiShield size={14} /> },
+                { label: 'Security Logs', icon: <FiTrendingUp size={14} /> },
+              ].map(({ label, icon }) => (
+                <button
+                  key={label}
+                  style={{
+                    width: '100%', display: 'flex',
+                    alignItems: 'center', justifyContent: 'space-between',
+                    padding: '12px', borderRadius: 10, border: 'none',
+                    background: 'transparent', cursor: 'pointer',
+                    fontSize: 13, fontWeight: 500, color: '#1a1a2e',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#f4f2fb';
+                    e.currentTarget.style.color = PURPLE;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.color = '#1a1a2e';
+                  }}
+                >
+                  <span>{label}</span>
+                  <FiChevronRight size={14} style={{ opacity: 0.4 }} />
+                </button>
+              ))}
             </div>
           </div>
         </div>

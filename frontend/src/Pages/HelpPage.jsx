@@ -1,331 +1,390 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiSearch, FiUser, FiCreditCard, FiSmartphone, FiBriefcase,
   FiShield, FiHelpCircle, FiChevronRight, FiMail, FiMessageCircle,
-  FiArrowRight, FiZap, FiX
+  FiArrowRight, FiZap, FiX,
 } from 'react-icons/fi';
 
-/* ── Floating particle background ───────────────────────────── */
-function Particles() {
-  const items = useRef(
-    Array.from({ length: 28 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: 3 + Math.random() * 4,
-      dur: 4 + Math.random() * 6,
-      delay: Math.random() * 5,
-      opacity: 0.06 + Math.random() * 0.12,
-    }))
-  ).current;
+const PURPLE = '#6c3fc5';
+const PURPLE_LIGHT = '#EEEDFE';
+const PURPLE_BORDER = '#AFA9EC';
+const PURPLE_TEXT = '#534AB7';
 
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {items.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full bg-violet-500"
-          style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: p.opacity }}
-          animate={{ y: [0, -20, 0], opacity: [p.opacity, p.opacity * 3, p.opacity] }}
-          transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ── Animated counter ────────────────────────────────────────── */
+/* ── Animated counter ── */
 function Counter({ value }) {
   const [display, setDisplay] = useState(0);
   const ref = useRef(null);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) {
-        let start = 0;
-        const step = () => {
-          start += 1;
-          setDisplay(start);
-          if (start < value) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
-        observer.disconnect();
-      }
-    }, { threshold: 0.5 });
+    const observer = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          let start = 0;
+          const step = () => {
+            start += 1;
+            setDisplay(start);
+            if (start < value) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [value]);
+
   return <span ref={ref}>{display}</span>;
 }
 
-/* ── Category card ───────────────────────────────────────────── */
-const CARD_COLORS = [
-  { bg: 'bg-violet-50', border: 'border-violet-100', icon: 'bg-violet-100 text-violet-600', hover: 'group-hover:bg-violet-600 group-hover:text-white', accent: 'text-violet-600', badge: 'bg-violet-50 text-violet-600 border-violet-200' },
-  { bg: 'bg-rose-50',   border: 'border-rose-100',   icon: 'bg-rose-100 text-rose-500',     hover: 'group-hover:bg-rose-500 group-hover:text-white',   accent: 'text-rose-500',   badge: 'bg-rose-50 text-rose-600 border-rose-200' },
-  { bg: 'bg-emerald-50',border: 'border-emerald-100',icon: 'bg-emerald-100 text-emerald-600',hover:'group-hover:bg-emerald-600 group-hover:text-white',accent:'text-emerald-600', badge:'bg-emerald-50 text-emerald-700 border-emerald-200'},
-  { bg: 'bg-amber-50',  border: 'border-amber-100',  icon: 'bg-amber-100 text-amber-600',   hover: 'group-hover:bg-amber-500 group-hover:text-white',  accent: 'text-amber-600',  badge: 'bg-amber-50 text-amber-700 border-amber-200' },
-  { bg: 'bg-sky-50',    border: 'border-sky-100',    icon: 'bg-sky-100 text-sky-600',       hover: 'group-hover:bg-sky-600 group-hover:text-white',    accent: 'text-sky-600',    badge: 'bg-sky-50 text-sky-700 border-sky-200' },
-  { bg: 'bg-fuchsia-50',border: 'border-fuchsia-100',icon: 'bg-fuchsia-100 text-fuchsia-600',hover:'group-hover:bg-fuchsia-600 group-hover:text-white',accent:'text-fuchsia-600',badge:'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200'},
+/* ── Category card ── */
+const CATEGORY_COLORS = [
+  { bg: '#F5F3FF', border: '#DDD6FE', iconBg: '#EDE9FE', iconColor: '#7C3AED', textColor: '#5B21B6' },
+  { bg: '#FFF1F2', border: '#FECDD3', iconBg: '#FFE4E6', iconColor: '#E11D48', textColor: '#9F1239' },
+  { bg: '#ECFDF5', border: '#A7F3D0', iconBg: '#D1FAE5', iconColor: '#059669', textColor: '#065F46' },
+  { bg: '#FFFBEB', border: '#FDE68A', iconBg: '#FEF3C7', iconColor: '#D97706', textColor: '#92400E' },
+  { bg: '#EFF6FF', border: '#BFDBFE', iconBg: '#DBEAFE', iconColor: '#2563EB', textColor: '#1E40AF' },
+  { bg: '#FDF4FF', border: '#E9D5FF', iconBg: '#F3E8FF', iconColor: '#9333EA', textColor: '#6B21A8' },
 ];
 
 function CategoryCard({ cat, idx }) {
-  const c = CARD_COLORS[idx % CARD_COLORS.length];
+  const [hovered, setHovered] = useState(false);
+  const c = CATEGORY_COLORS[idx % CATEGORY_COLORS.length];
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ delay: idx * 0.08, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6, transition: { duration: 0.25 } }}
-      className={`group relative bg-white border ${c.border} rounded-[2rem] p-8 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl hover:shadow-slate-200/60 transition-shadow duration-300`}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ delay: idx * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => {}}
+      style={{
+        background: hovered ? c.bg : '#fff',
+        border: `0.5px solid ${hovered ? c.border : '#e8e6f0'}`,
+        borderRadius: 16,
+        padding: '22px 20px',
+        cursor: 'pointer',
+        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+        transition: 'background 0.18s, border-color 0.18s, transform 0.18s',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      {/* Corner accent */}
-      <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full ${c.bg} opacity-60 transition-all duration-500 group-hover:scale-[3]`} />
+      {/* Icon */}
+      <div style={{
+        width: 46, height: 46, borderRadius: 12,
+        background: c.iconBg,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: 14,
+        color: c.iconColor, fontSize: 20,
+        transition: 'background 0.18s',
+      }}>
+        {cat.icon}
+      </div>
 
-      <div className="relative z-10">
-        {/* Icon */}
-        <motion.div
-          className={`w-14 h-14 rounded-2xl ${c.icon} ${c.hover} flex items-center justify-center mb-6 transition-all duration-300 shadow-sm`}
-          whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
-        >
-          {cat.icon}
-        </motion.div>
+      <h3 style={{ fontSize: 14, fontWeight: 600, color: '#1a1a2e', marginBottom: 6 }}>
+        {cat.title}
+      </h3>
+      <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.55, marginBottom: 14 }}>
+        {cat.desc}
+      </p>
 
-        <h3 className="text-xl font-black text-slate-900 mb-2 tracking-tight">{cat.title}</h3>
-        <p className="text-slate-500 text-sm leading-relaxed mb-6">{cat.desc}</p>
-
-        <div className="flex items-center justify-between">
-          <span className={`text-xs font-bold px-3 py-1.5 rounded-full border ${c.badge}`}>
-            <Counter value={cat.count} /> articles
-          </span>
-          <motion.span
-            className={`${c.accent} flex items-center gap-1 text-sm font-bold`}
-            whileHover={{ x: 4 }}
-          >
-            Explore <FiArrowRight size={14} />
-          </motion.span>
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{
+          fontSize: 11, padding: '3px 10px', borderRadius: 99,
+          background: c.iconBg, color: c.textColor,
+          border: `0.5px solid ${c.border}`, fontWeight: 500,
+        }}>
+          <Counter value={cat.count} /> articles
+        </span>
+        <span style={{
+          fontSize: 12, color: c.iconColor, fontWeight: 500,
+          display: 'flex', alignItems: 'center', gap: 4,
+          transform: hovered ? 'translateX(3px)' : 'translateX(0)',
+          transition: 'transform 0.18s',
+        }}>
+          Explore <FiArrowRight size={13} />
+        </span>
       </div>
     </motion.div>
   );
 }
 
-/* ── Article row ─────────────────────────────────────────────── */
+/* ── Article row ── */
 function ArticleRow({ article, idx }) {
+  const [hovered, setHovered] = useState(false);
+
   return (
     <motion.button
-      initial={{ opacity: 0, x: -20 }}
+      initial={{ opacity: 0, x: -16 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: idx * 0.07, duration: 0.45, ease: 'easeOut' }}
-      whileHover={{ x: 6 }}
-      className="w-full group bg-white border border-slate-100 hover:border-violet-200 rounded-2xl px-6 py-4 flex items-center justify-between hover:shadow-lg hover:shadow-violet-50 transition-all duration-200 text-left"
+      transition={{ delay: idx * 0.06, duration: 0.4, ease: 'easeOut' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        width: '100%', display: 'flex', alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '12px 14px',
+        background: '#fff',
+        border: `0.5px solid ${hovered ? PURPLE_BORDER : '#e8e6f0'}`,
+        borderRadius: 10, cursor: 'pointer',
+        transform: hovered ? 'translateX(5px)' : 'translateX(0)',
+        transition: 'border-color 0.15s, transform 0.15s',
+        textAlign: 'left',
+        marginBottom: 8,
+      }}
     >
-      <div className="flex items-center gap-4">
-        <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-100 group-hover:bg-violet-50 group-hover:border-violet-200 flex items-center justify-center text-slate-400 group-hover:text-violet-500 text-xs font-black transition-all">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: hovered ? PURPLE_LIGHT : '#f4f2fb',
+          border: `0.5px solid ${hovered ? PURPLE_BORDER : '#e8e6f0'}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 10, fontWeight: 600,
+          color: hovered ? PURPLE : '#94a3b8',
+          flexShrink: 0,
+          transition: 'background 0.15s, color 0.15s',
+        }}>
           {String(idx + 1).padStart(2, '0')}
         </div>
-        <span className="text-slate-700 font-semibold group-hover:text-slate-900 transition-colors">{article}</span>
+        <span style={{
+          fontSize: 13, fontWeight: 500,
+          color: hovered ? '#1a1a2e' : '#334155',
+          transition: 'color 0.15s',
+        }}>
+          {article}
+        </span>
       </div>
-      <FiChevronRight className="text-slate-300 group-hover:text-violet-500 flex-shrink-0 transition-colors" size={18} />
+      <FiChevronRight
+        size={16}
+        style={{ color: hovered ? PURPLE : '#cbd5e1', flexShrink: 0, transition: 'color 0.15s' }}
+      />
     </motion.button>
   );
 }
 
-/* ── Stats bar ───────────────────────────────────────────────── */
+/* ── Stats bar ── */
 function StatsBar() {
   const stats = [
-    { label: 'Articles', value: 71 },
-    { label: 'Categories', value: 6 },
-    { label: 'Avg. Response', value: '< 2h', raw: null },
-    { label: 'Satisfaction', value: '98%', raw: null },
+    { label: 'Articles', value: 71, suffix: '+' },
+    { label: 'Categories', value: 6, suffix: '' },
+    { label: 'Avg. Response', raw: '< 2h' },
+    { label: 'Satisfaction', raw: '98%' },
   ];
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 0.6 }}
-      className="mt-12 flex flex-wrap justify-center gap-6"
+      transition={{ delay: 0.6, duration: 0.5 }}
+      style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, marginTop: 24 }}
     >
       {stats.map((s, i) => (
-        <div key={i} className="flex items-center gap-3 px-5 py-3 bg-white/70 border border-slate-200 rounded-full backdrop-blur-sm shadow-sm">
-          <span className="text-xl font-black text-violet-600">
-            {s.raw === null ? s.value : <><Counter value={s.value} />+</>}
+        <div key={i} style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '8px 16px',
+          background: '#fff',
+          border: '0.5px solid #e8e6f0',
+          borderRadius: 99,
+        }}>
+          <span style={{ fontSize: 16, fontWeight: 700, color: PURPLE }}>
+            {s.raw ?? <><Counter value={s.value} />{s.suffix}</>}
           </span>
-          <span className="text-sm text-slate-500 font-semibold">{s.label}</span>
+          <span style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>{s.label}</span>
         </div>
       ))}
     </motion.div>
   );
 }
 
-/* ── Search bar ──────────────────────────────────────────────── */
+/* ── Search bar ── */
 function SearchBar({ query, setQuery }) {
   const [focused, setFocused] = useState(false);
   const tips = ['KYC Help', 'Partner Setup', 'Payment Issues', 'App Guide'];
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <motion.div
-        animate={{ boxShadow: focused ? '0 20px 60px -10px rgba(109,40,217,0.2)' : '0 8px 30px -8px rgba(0,0,0,0.08)' }}
-        className="relative bg-white rounded-[1.75rem] border border-slate-200 overflow-hidden transition-colors duration-200"
-        style={{ borderColor: focused ? '#7c3aed' : undefined }}
-      >
-        <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-          <FiSearch size={20} className={`transition-colors duration-200 ${focused ? 'text-violet-500' : 'text-slate-400'}`} />
-        </div>
+    <div style={{ maxWidth: 560, margin: '0 auto' }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 8,
+        background: '#fff',
+        border: `1px solid ${focused ? PURPLE : '#e8e6f0'}`,
+        borderRadius: 14, padding: '10px 10px 10px 16px',
+        transition: 'border-color 0.18s',
+      }}>
+        <FiSearch size={16} style={{ color: focused ? PURPLE : '#94a3b8', flexShrink: 0 }} />
         <input
           type="text"
           placeholder="Search articles, guides, questions..."
-          className="w-full pl-14 pr-36 py-5 bg-transparent outline-none text-slate-800 font-medium placeholder-slate-400 text-base"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={e => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          style={{
+            flex: 1, border: 'none', outline: 'none',
+            background: 'transparent',
+            fontSize: 13, color: '#1a1a2e',
+          }}
         />
         {query && (
           <button
-            className="absolute right-28 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             onClick={() => setQuery('')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: 4 }}
           >
-            <FiX size={16} />
+            <FiX size={14} />
           </button>
         )}
-        <div className="absolute right-2 inset-y-2">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="h-full px-6 bg-violet-600 hover:bg-violet-700 text-white rounded-[1.25rem] font-bold text-sm flex items-center gap-2 transition-colors"
-          >
-            <FiZap size={14} /> Search
-          </motion.button>
-        </div>
-      </motion.div>
+        <button style={{
+          background: PURPLE, color: '#fff',
+          border: 'none', borderRadius: 10,
+          padding: '8px 16px', fontSize: 12, fontWeight: 600,
+          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+          flexShrink: 0,
+        }}>
+          <FiZap size={12} /> Search
+        </button>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="mt-4 flex flex-wrap justify-center gap-2"
-      >
-        <span className="text-xs text-slate-400 font-bold self-center">POPULAR:</span>
-        {tips.map((t) => (
+      <div style={{
+        display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
+        gap: 6, marginTop: 12,
+      }}>
+        <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600, alignSelf: 'center' }}>
+          Popular:
+        </span>
+        {tips.map(t => (
           <button
             key={t}
             onClick={() => setQuery(t)}
-            className="text-xs font-bold px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-500 hover:border-violet-300 hover:text-violet-600 transition-all"
+            style={{
+              fontSize: 11, fontWeight: 500,
+              padding: '4px 10px', borderRadius: 99,
+              background: '#fff', border: '0.5px solid #e8e6f0',
+              color: '#64748b', cursor: 'pointer',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = PURPLE_BORDER;
+              e.currentTarget.style.color = PURPLE;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = '#e8e6f0';
+              e.currentTarget.style.color = '#64748b';
+            }}
           >
             {t}
           </button>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
 
-/* ── Main page ───────────────────────────────────────────────── */
+/* ── Main page ── */
 const HelpPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
-    { icon: <FiUser size={22} />,         title: 'Account & Profile',  desc: 'Manage your account settings, KYC, and security.',      count: 12 },
-    { icon: <FiCreditCard size={22} />,   title: 'Payments & Billing', desc: 'Information about fees, refunds, and invoices.',          count: 8 },
-    { icon: <FiSmartphone size={22} />,   title: 'App & Services',     desc: 'How to use the mobile app and available services.',       count: 15 },
-    { icon: <FiBriefcase size={22} />,    title: 'Partner Program',    desc: 'Details for digital service partners and agents.',        count: 10 },
-    { icon: <FiShield size={22} />,       title: 'Privacy & Legal',    desc: 'Terms, privacy policy, and security protocols.',          count: 6 },
-    { icon: <FiHelpCircle size={22} />,   title: 'General Support',    desc: 'Frequently asked questions and general help.',            count: 20 },
+    { icon: <FiUser size={20} />,        title: 'Account & Profile',  desc: 'Manage your account settings, KYC, and security.',     count: 12 },
+    { icon: <FiCreditCard size={20} />,  title: 'Payments & Billing', desc: 'Information about fees, refunds, and invoices.',         count: 8  },
+    { icon: <FiSmartphone size={20} />,  title: 'App & Services',     desc: 'How to use the mobile app and available services.',      count: 15 },
+    { icon: <FiBriefcase size={20} />,   title: 'Partner Program',    desc: 'Details for digital service partners and agents.',       count: 10 },
+    { icon: <FiShield size={20} />,      title: 'Privacy & Legal',    desc: 'Terms, privacy policy, and security protocols.',         count: 6  },
+    { icon: <FiHelpCircle size={20} />,  title: 'General Support',    desc: 'Frequently asked questions and general help.',           count: 20 },
   ];
 
   const popularArticles = [
     'How to complete your KYC verification?',
     'Linking your bank account to eFormX',
-    'Becoming a service partner: A step-by-step guide',
+    'Becoming a service partner: a step-by-step guide',
     'Understanding the fee structure for digital services',
     'Security best practices for your mobile app',
   ];
 
+  const section = (color) => ({
+    width: 3, height: 22, background: color,
+    borderRadius: 0, marginRight: 10, flexShrink: 0,
+  });
+
   return (
-    <div className="min-h-screen bg-slate-50 relative overflow-x-hidden">
+    <div style={{ minHeight: '100vh', background: '#f8f7fc' }}>
 
       {/* ── Hero ── */}
-      <section className="relative pt-36 pb-24 overflow-hidden">
-        {/* Mesh background */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-b from-violet-100 to-transparent rounded-b-full opacity-50" />
-          <div className="absolute top-20 left-10 w-72 h-72 bg-fuchsia-100 rounded-full blur-[80px] opacity-40" />
-          <div className="absolute top-10 right-10 w-64 h-64 bg-sky-100 rounded-full blur-[80px] opacity-50" />
-        </div>
-        <Particles />
-
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-50 border border-violet-200 text-violet-600 text-xs font-bold tracking-widest uppercase mb-6"
-          >
+      <section style={{ padding: '60px 24px 48px', textAlign: 'center' }}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+        >
+          {/* Pill */}
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '5px 14px', borderRadius: 99,
+            background: PURPLE_LIGHT, border: `0.5px solid ${PURPLE_BORDER}`,
+            fontSize: 11, fontWeight: 600, color: PURPLE_TEXT,
+            letterSpacing: '0.08em', textTransform: 'uppercase',
+            marginBottom: 20,
+          }}>
             <motion.span
               animate={{ scale: [1, 1.4, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="inline-block w-1.5 h-1.5 rounded-full bg-violet-500"
+              style={{ width: 6, height: 6, borderRadius: '50%', background: PURPLE, display: 'inline-block' }}
             />
             Help Center
-          </motion.div>
+          </div>
+        </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-6xl font-black text-slate-900 mb-5 leading-tight tracking-tight"
-          >
-            How can we{' '}
-            <span className="relative inline-block text-violet-600">
-              assist you
-              <motion.span
-                className="absolute left-0 bottom-1 h-1.5 bg-violet-200 rounded-full -z-10"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.9, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                style={{ width: '100%', originX: 0 }}
-              />
-            </span>{' '}
-            today?
-          </motion.h1>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 12, lineHeight: 1.25 }}
+        >
+          How can we{' '}
+          <span style={{ color: PURPLE }}>assist you</span>{' '}
+          today?
+        </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35, duration: 0.5 }}
-            className="text-slate-500 text-lg mb-10 max-w-xl mx-auto leading-relaxed"
-          >
-            Search our knowledge base or browse categories below to find answers fast.
-          </motion.p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.28, duration: 0.45 }}
+          style={{ fontSize: 14, color: '#64748b', marginBottom: 28, maxWidth: 480, margin: '0 auto 28px' }}
+        >
+          Search our knowledge base or browse categories below to find answers fast.
+        </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.55 }}
-          >
-            <SearchBar query={searchQuery} setQuery={setSearchQuery} />
-          </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.38, duration: 0.5 }}
+        >
+          <SearchBar query={searchQuery} setQuery={setSearchQuery} />
+        </motion.div>
 
-          <StatsBar />
-        </div>
+        <StatsBar />
       </section>
 
       {/* ── Categories ── */}
-      <section className="max-w-7xl mx-auto px-6 mb-20">
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 48px' }}>
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex items-center gap-4 mb-10"
+          style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}
         >
-          <div className="w-1 h-8 bg-violet-500 rounded-full" />
-          <h2 className="text-2xl font-black text-slate-900">Browse by category</h2>
+          <div style={section(PURPLE)} />
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>Browse by category</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          gap: 14,
+        }}>
           {categories.map((cat, idx) => (
             <CategoryCard key={idx} cat={cat} idx={idx} />
           ))}
@@ -333,107 +392,143 @@ const HelpPage = () => {
       </section>
 
       {/* ── Articles + Contact ── */}
-      <section className="max-w-7xl mx-auto px-6 pb-24 grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <section style={{
+        maxWidth: 1100, margin: '0 auto',
+        padding: '0 24px 64px',
+        display: 'grid',
+        gridTemplateColumns: '2fr 1fr',
+        gap: 24,
+      }}>
 
         {/* Popular articles */}
-        <div className="lg:col-span-2">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-4 mb-7"
-          >
-            <div className="w-1 h-8 bg-rose-400 rounded-full" />
-            <h2 className="text-2xl font-black text-slate-900">Popular articles</h2>
-          </motion.div>
-          <div className="space-y-3">
-            {popularArticles.map((a, i) => (
-              <ArticleRow key={i} article={a} idx={i} />
-            ))}
-          </div>
-        </div>
-
-        {/* Contact card */}
         <div>
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-center gap-4 mb-7"
+            style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}
           >
-            <div className="w-1 h-8 bg-emerald-400 rounded-full" />
-            <h2 className="text-2xl font-black text-slate-900">Still stuck?</h2>
+            <div style={section('#e11d48')} />
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>Popular articles</h2>
+          </motion.div>
+          {popularArticles.map((a, i) => (
+            <ArticleRow key={i} article={a} idx={i} />
+          ))}
+        </div>
+
+        {/* Contact */}
+        <div>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}
+          >
+            <div style={section('#10b981')} />
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>Still stuck?</h2>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative bg-slate-900 text-white rounded-[2rem] p-8 overflow-hidden shadow-2xl shadow-slate-900/20"
+            style={{
+              background: '#1e1b2e',
+              borderRadius: 16, padding: 24,
+              color: '#fff', position: 'relative', overflow: 'hidden',
+            }}
           >
-            {/* Animated blobs inside card */}
-            <motion.div
-              className="absolute -top-12 -right-12 w-40 h-40 bg-violet-600 rounded-full blur-2xl opacity-40"
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <motion.div
-              className="absolute -bottom-8 -left-8 w-32 h-32 bg-fuchsia-600 rounded-full blur-2xl opacity-30"
-              animate={{ scale: [1.2, 1, 1.2] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            />
+            {/* Decorative circle */}
+            <div style={{
+              position: 'absolute', top: -40, right: -40,
+              width: 120, height: 120, borderRadius: '50%',
+              background: 'rgba(124,58,237,0.25)',
+            }} />
 
-            <div className="relative z-10">
-              <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center mb-5">
-                <FiMessageCircle size={20} className="text-violet-300" />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              {/* Icon */}
+              <div style={{
+                width: 42, height: 42, borderRadius: 10,
+                background: 'rgba(255,255,255,0.08)',
+                border: '0.5px solid rgba(255,255,255,0.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: 14,
+              }}>
+                <FiMessageCircle size={18} style={{ color: '#a78bfa' }} />
               </div>
 
-              <h3 className="text-xl font-black mb-2">We're here to help</h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+              <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>We're here to help</h3>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, marginBottom: 18 }}>
                 Can't find what you need? Our dedicated team responds within 2 hours.
               </p>
 
-              <div className="space-y-3 mb-6">
-                <motion.a
-                  href="mailto:support@eformx.com"
-                  whileHover={{ x: 4 }}
-                  className="flex items-center gap-3 p-3.5 rounded-xl bg-white/8 border border-white/10 hover:bg-white/15 transition-all text-sm font-semibold"
-                >
-                  <FiMail size={16} className="text-violet-400" />
-                  support@eformx.com
-                </motion.a>
-                <motion.button
-                  whileHover={{ x: 4 }}
-                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/8 border border-white/10 hover:bg-white/15 transition-all text-sm font-semibold text-left"
-                >
-                  <FiMessageCircle size={16} className="text-emerald-400" />
-                  Live Chat Support
-                  <span className="ml-auto flex items-center gap-1 text-xs text-emerald-400 font-bold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    Online
-                  </span>
-                </motion.button>
-              </div>
+              {/* Contact rows */}
+              {[
+                {
+                  icon: <FiMail size={14} style={{ color: '#a78bfa', flexShrink: 0 }} />,
+                  label: 'support@eformx.com',
+                  extra: null,
+                },
+                {
+                  icon: <FiMessageCircle size={14} style={{ color: '#4ade80', flexShrink: 0 }} />,
+                  label: 'Live Chat Support',
+                  extra: (
+                    <span style={{
+                      marginLeft: 'auto', display: 'flex', alignItems: 'center',
+                      gap: 5, fontSize: 11, color: '#4ade80', fontWeight: 600,
+                    }}>
+                      <span style={{
+                        width: 6, height: 6, borderRadius: '50%',
+                        background: '#4ade80', display: 'inline-block',
+                      }} />
+                      Online
+                    </span>
+                  ),
+                },
+              ].map(({ icon, label, extra }) => (
+                <div key={label} style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  padding: '10px 12px', borderRadius: 8,
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '0.5px solid rgba(255,255,255,0.1)',
+                  fontSize: 12, color: '#e2e8f0',
+                  marginBottom: 8, cursor: 'pointer',
+                }}>
+                  {icon}
+                  {label}
+                  {extra}
+                </div>
+              ))}
 
-              <motion.button
-                whileHover={{ y: -2, boxShadow: '0 12px 30px -8px rgba(124,58,237,0.5)' }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-black text-sm transition-colors flex items-center justify-center gap-2"
+              <button style={{
+                width: '100%', padding: '11px 0',
+                borderRadius: 10, border: 'none',
+                background: PURPLE, color: '#fff',
+                fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                marginTop: 4,
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = '#5430a8'}
+                onMouseLeave={e => e.currentTarget.style.background = PURPLE}
               >
                 Contact Us <FiArrowRight size={14} />
-              </motion.button>
+              </button>
             </div>
           </motion.div>
 
-          {/* Response time badge */}
+          {/* Response note */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-500 font-semibold"
+            transition={{ delay: 0.25 }}
+            style={{
+              marginTop: 12, display: 'flex', alignItems: 'center',
+              justifyContent: 'center', gap: 6,
+              fontSize: 11, color: '#94a3b8', fontWeight: 500,
+            }}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
             Average response time under 2 hours
           </motion.div>
         </div>

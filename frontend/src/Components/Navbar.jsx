@@ -84,9 +84,9 @@ const Navbar = () => {
               Dashboard
             </NavLink>
           ) : (
-            <button onClick={openLogin} className="btn-primary cursor-pointer">
+            <NavLink to="/dashboard" className="btn-primary cursor-pointer">
               Get Started
-            </button>
+            </NavLink>
           )}
         </div>
       </nav>

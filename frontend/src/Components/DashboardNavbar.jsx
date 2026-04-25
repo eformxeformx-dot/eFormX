@@ -2,9 +2,11 @@ import { NavLink } from 'react-router-dom'
 import { FiMenu, FiBell, FiSearch, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import UserDropdown from './UserDropdown'
+import { useSearch } from '../context/SearchContext'
 
 const DashboardNavbar = ({ onLoginClick, onSignupClick, isSidebarCollapsed, toggleSidebar, toggleMobileMenu }) => {
   const { user } = useAuth();
+  const { searchQuery, setSearchQuery } = useSearch();
 
   return (
     <nav className="h-16 md:h-20 bg-purple text-white flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 shadow-lg">
@@ -37,6 +39,8 @@ const DashboardNavbar = ({ onLoginClick, onSignupClick, isSidebarCollapsed, togg
           <input 
             type="text" 
             placeholder="Search services..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent border-none outline-none text-sm text-white placeholder:text-white/40 w-64"
           />
         </div>
@@ -85,4 +89,3 @@ const DashboardNavbar = ({ onLoginClick, onSignupClick, isSidebarCollapsed, togg
   )
 }
 export default DashboardNavbar
-

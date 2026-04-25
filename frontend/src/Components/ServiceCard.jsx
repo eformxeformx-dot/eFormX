@@ -1,43 +1,90 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React from 'react';
+import styled from 'styled-components';
 
 const ServiceCard = ({ icon, title, hindiTitle, ctaText, onClick }) => {
   return (
-    <motion.div 
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="bg-white rounded-xl md:rounded-2xl lg:rounded-[2rem] p-2.5 sm:p-3 md:p-5 lg:p-6 flex flex-col items-start text-left shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-20px_rgba(111,44,242,0.15)] transition-all border border-slate-100 h-full relative group overflow-hidden cursor-pointer w-full"
-      onClick={onClick}
-    >
-      {/* Icon Box */}
-      <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl bg-slate-50 flex items-center justify-center mb-2 sm:mb-2.5 md:mb-4 lg:mb-5 group-hover:bg-purple/5 transition-colors flex-shrink-0">
-        <span className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-slate-800 drop-shadow-sm group-hover:scale-110 transition-transform">
-          {icon}
-        </span>
+    <Wrapper onClick={onClick}>
+      <div className="card">
+        <div className="icon-wrap">{icon}</div>
+        <p className="title">{title}</p>
+        <p className="subtitle">{hindiTitle}</p>
+        <button className="btn">{ctaText}</button>
       </div>
+    </Wrapper>
+  );
+};
 
-      {/* Text Content */}
-      <div className="flex-1 space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 mb-2 sm:mb-2.5 md:mb-4 lg:mb-5 w-full min-w-0">
-        <h3 className="text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-black text-slate-900 tracking-tight leading-tight line-clamp-2 break-words">
-          {title}
-        </h3>
-        <p className="text-[7px] sm:text-[8px] md:text-[11px] lg:text-xs xl:text-sm font-hindi font-bold text-purple opacity-70 tracking-wide uppercase truncate">
-          {hindiTitle}
-        </p>
-      </div>
+const Wrapper = styled.div`
+  cursor: pointer;
 
-      {/* Action Button */}
-      <button 
-        onClick={(e) => { e.stopPropagation(); onClick(); }}
-        className="w-full py-1.5 sm:py-2 md:py-2.5 lg:py-3 rounded-lg sm:rounded-xl md:rounded-2xl bg-purple text-white font-black text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs xl:text-sm uppercase tracking-wider lg:tracking-widest hover:bg-secondary transition-all shadow-lg shadow-purple/20 active:scale-[0.98] flex-shrink-0"
-      >
-        {ctaText}
-      </button>
+  .card {
+    background: #ffffff;
+    border: 0.5px solid #e0ddf5;
+    border-radius: 12px;
+    padding: 18px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: background 0.2s ease, border-color 0.2s ease,
+      transform 0.2s ease, box-shadow 0.2s ease;
+  }
 
+  .card:hover {
+    background: #eae6fb;
+    border-color: #afa9ec;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(127, 119, 221, 0.15);
+  }
 
-      {/* Subtle Bottom Glow */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple/40 to-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-    </motion.div>
-  )
-}
+  .icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #f5f5f5;
+    border: 0.5px solid #e4e4e4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    font-size: 22px;
+    color: #534ab7;
+    transition: background 0.2s ease;
+  }
 
-export default ServiceCard
+  .card:hover .icon-wrap {
+    background: #ffffff;
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin: 0;
+  }
+
+  .subtitle {
+    font-size: 11.5px;
+    color: #666;
+    margin: 0 0 6px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 9px 0;
+    border-radius: 8px;
+    border: none;
+    background: #6c3fc5;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: auto;
+    transition: background 0.2s ease;
+  }
+
+  .btn:hover {
+    background: #5430a8;
+  }
+`;
+
+export default ServiceCard;

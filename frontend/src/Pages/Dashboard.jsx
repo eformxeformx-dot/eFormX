@@ -6,9 +6,12 @@ import { motion } from 'framer-motion';
 import { FiUsers, FiBookOpen, FiShield, FiFileText, FiEdit3, FiBriefcase, FiHome, FiCheckCircle } from 'react-icons/fi';
 import { FaGraduationCap, FaGavel } from 'react-icons/fa';
 import { fetchService, applyService } from '../services/Api';
+import { useSearch } from '../context/SearchContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { searchQuery } = useSearch();
+
   const handleApply = async (serviceName, type) => {
     if (type === 'all_vacancy') {
       navigate('/vacancies');
@@ -28,7 +31,7 @@ const Dashboard = () => {
     }
   };
 
-  const services = [
+  const allServices = [
     { icon: <FiUsers />, title: "All Vacancy", type: "all_vacancy", hindiTitle: "अन्य स्थानीय नौकरियाँ", ctaText: "View" },
     { icon: <FaGraduationCap />, title: "Scholarship", type: "scholarship", hindiTitle: "स्कॉलरशिप से जुड़ी सेवा", ctaText: "Open" },
     { icon: <FaGavel />, title: "Legal Services", type: "legal", hindiTitle: "स्टाम्प • एग्रीमेंट", ctaText: "Get Service" },
@@ -40,6 +43,11 @@ const Dashboard = () => {
     { icon: <FiBookOpen />, title: "College Admission", type: "admission", hindiTitle: "फॉर्म • काउंसलिंग • सहायता", ctaText: "Apply" },
     { icon: <FiCheckCircle />, title: "Document Verification", type: "verification", hindiTitle: "दस्तावेज़ सत्यापन सेवा", ctaText: "Verify" }
   ];
+
+  const filteredServices = allServices.filter(service => 
+    service.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    service.hindiTitle.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Logic to show appropriate cards based on screen size
   const getLimit = () => {
@@ -73,8 +81,7 @@ const Dashboard = () => {
         </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 w-full">
-
-          {services.slice(0, limit).map((service, idx) => (
+          {filteredServices.slice(0, limit).map((service, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -92,10 +99,18 @@ const Dashboard = () => {
           ))}
         </div>
         
-        {services.length > limit && (
+        {filteredServices.length === 0 && (
+          <div className="text-center py-20 px-4">
+             <div className="text-6xl mb-6">🔍</div>
+             <h3 className="text-xl font-black text-slate-800 mb-2">No services found</h3>
+             <p className="text-slate-400 font-medium">Try searching for something else, like "Scholarship" or "Legal".</p>
+          </div>
+        )}
+        
+        {filteredServices.length > limit && (
           <div className="mt-12 text-center">
             <button 
-              onClick={() => setLimit(services.length)}
+              onClick={() => setLimit(filteredServices.length)}
               className="bg-purple text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base hover:bg-secondary transition-all shadow-lg"
             >
               View All Services
@@ -106,6 +121,5 @@ const Dashboard = () => {
     </DashboardLayout>
   );
 };
-
 
 export default Dashboard;
